@@ -14,7 +14,7 @@ from pdf_segmentation.utils import (
     to_serializable,
 )
 
-from lecture_processor.models import Derivation
+from .model import Derivation
 from lecture_processor.utils import extract_langsmith_prompt
 
 

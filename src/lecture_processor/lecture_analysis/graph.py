@@ -9,7 +9,7 @@ from langchain.chat_models import init_chat_model
 from langgraph.graph import StateGraph, START, END
 
 # --- Local Application ---
-from lecture_processor.models import LectureAnalysis
+from .model import LectureAnalysis
 from pdf_segmentation.utils import (
     save_graph_visualization,
     to_serializable,

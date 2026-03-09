@@ -2,13 +2,12 @@ import asyncio
 from pathlib import Path
 from typing import List
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 from langsmith import Client
 from langchain.chat_models import init_chat_model
 from langgraph.graph import StateGraph, START, END
 from typing import Literal
-from lecture_processor.models import ConceptualQuestion
-from pdf_invoke import MultiModalLLM
+
 from pdf_segmentation.utils import (
     save_graph_visualization,
     to_serializable,

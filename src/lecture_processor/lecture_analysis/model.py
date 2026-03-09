@@ -1,6 +1,7 @@
 from pydantic import BaseModel, Field
 from typing import List, Optional
 
+
 class LectureAnalysis(BaseModel):
     lecture_title: str = Field(
         ...,

@@ -86,7 +86,7 @@ async def postprocess_lecture_output(
 
 
 async def main():
-    folder_path = Path(r"data\me118\outputs").resolve()
+    folder_path = Path(r"data\me118_update\outputs").resolve()
 
     filename = "output.json"
     tasks = []
@@ -95,7 +95,7 @@ async def main():
         if not p.is_dir():
             continue
 
-        output_text_name = f"{p.name.split('.')[0]}.txt"
+        output_text_name = f"{p.name.split('.')[0]}.md"
         output = p / output_text_name
         data = p / filename
 

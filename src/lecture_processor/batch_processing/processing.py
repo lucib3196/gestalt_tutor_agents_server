@@ -15,7 +15,6 @@ async def process_single_lecture(
     filename = pdf_path.stem
 
     graph_input = State(lecture_pdf=pdf_path)
-    
 
     try:
         response = await FullExtractionGraph.ainvoke(graph_input)
@@ -42,7 +41,7 @@ async def process_single_lecture(
 
 
 async def main():
-    path = Path(r"data\me118").resolve()
+    path = Path(r"data\me118_update").resolve()
     save_root = path / "outputs"
     save_root.mkdir(exist_ok=True)
 
@@ -62,9 +61,13 @@ async def main():
     )
 
 
-if __name__ == "__main__":
+async def single():
     path = Path(r"data\me118").resolve()
     save_root = path / "outputs"
     save_root.mkdir(exist_ok=True)
     pdf = path / "me118_Lecture_01_08.pdf"
-    asyncio.run(process_single_lecture(pdf, save_root))
+    await process_single_lecture(pdf, save_root)
+
+
+if __name__ == "__main__":
+    asyncio.run(main())

@@ -1,6 +1,7 @@
-from pydantic import BaseModel , Field
-from .extraction import PageRange
+from pydantic import BaseModel, Field
 from typing import List
+from lecture_processor.models import PageRange
+
 
 class Derivation(BaseModel):
     derivation_title: str = Field(
