@@ -2,10 +2,10 @@
   "$schema": "https://langgra.ph/schema.json",
   "dependencies": ["."],
   "graphs": {
-    "agent_me135": "./src/agents/ME135Agent/main.py:agent",
-    "agent_me118": "./src/agents/ME118Agent/main.py:agent",
-    "agent_question_tutor": "./src/agents/GestaltQuestionTutor/main.py:agent",
-    "differential_eq_tutor": "./src/agents/LibreText/main.py:agent"
+    "agent_me135": "./src/agents/me135_agent/main.py:agent",
+    "agent_me118": "./src/agents/me118_agent/main.py:agent",
+    "agent_question_tutor": "./src/agents/gestalt_question_tutor/main.py:agent",
+    "differential_eq_tutor": "./src/agents/diff_libretext/main.py:agent"
   },
   "env": ".env",
   "image_distro": "wolfi"

@@ -2,7 +2,7 @@ import os
 from langchain_astradb import AstraDBVectorStore
 from langchain_google_genai import GoogleGenerativeAIEmbeddings
 from langchain_text_splitters import RecursiveCharacterTextSplitter
-from src.settings import get_settings
+from src.core.settings import get_settings
 from src.document_loaders.lecture_document_loader import LectureDocumentLoader
 
 settings = get_settings()

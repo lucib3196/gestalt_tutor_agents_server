@@ -3,9 +3,9 @@ from langchain_core.tools import tool
 from langchain.agents import create_agent
 from langsmith import Client
 
-from src.settings import get_settings
+from src.core.settings import get_settings
 from src.utils import extract_langsmith_prompt
-from src.agents.ME135Agent.vectorstore import vector_store
+from src.agents.me135_agent.vectorstore import vector_store
 from src.tools import refine_query
 
 

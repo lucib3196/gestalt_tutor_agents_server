@@ -3,11 +3,11 @@ from langchain_core.tools import tool
 from langchain.agents import create_agent
 from langsmith import Client
 
-from src.settings import get_settings
+from src.core.settings import get_settings
 from src.tools import refine_query
 from src.utils import extract_langsmith_prompt
-from src.agents.ME118Agent.vectorstore import vector_store
-from src.agents.LibreText.main import retrieve_diffeq
+from src.agents.me118_agent.vectorstore import vector_store
+from src.agents.diff_libretext.main import retrieve_diffeq
 
 settings = get_settings()
 client = Client()

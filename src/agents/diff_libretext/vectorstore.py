@@ -1,7 +1,7 @@
 from langchain_astradb import AstraDBVectorStore
 from langchain_google_genai import GoogleGenerativeAIEmbeddings
 import os
-from settings import get_settings
+from src.core.settings import get_settings
 
 settings = get_settings()
 

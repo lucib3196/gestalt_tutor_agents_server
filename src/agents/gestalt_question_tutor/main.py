@@ -2,7 +2,7 @@ from langchain.chat_models import init_chat_model
 from langsmith import Client
 from langchain.agents import create_agent
 
-from src.settings import get_settings
+from src.core.settings import get_settings
 from src.utils import extract_langsmith_prompt
 
 

@@ -3,7 +3,7 @@ from typing import List
 import json
 from langchain_core.document_loaders import BaseLoader
 from langchain_core.documents import Document
-from src.models import LectureMeta
+from src.lecture_processor.lecture_analysis.model import LectureAnalysis 
 
 
 class LectureDocumentLoaderBase(BaseLoader):
@@ -64,7 +64,7 @@ class LectureDocumentLoader(LectureDocumentLoaderBase):
                     raise ValueError(
                         "Failed to load the lecture metadata please fix before embedding"
                     )
-            lec_meta = LectureMeta.model_validate(lecture_metadata)
+            lec_meta = LectureAnalysis.model_validate(lecture_metadata)
             # -------------------------
             # Yield document
             # -------------------------

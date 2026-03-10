@@ -7,8 +7,8 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.tools import tool
 from langchain.agents import create_agent
 
-from agents.LibreText.vectorstore import vs
-from settings import get_settings
+from src.agents.diff_libretext.vectorstore import vs
+from src.core.settings import get_settings
 
 settings = get_settings()
 
