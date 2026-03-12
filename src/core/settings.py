@@ -34,15 +34,21 @@ class Settings(BaseSettings):
 
     @model_validator(mode="after")
     def validate_required_runtime_fields(self):
-        required_fields = [
+        dev_required = [
             "GOOGLE_API_KEY",
             "LANGSMITH_API_KEY",
             "LANGSMITH_PROJECT",
-            "ASTRA_DB_APPLICATION_TOKEN",
-            "ASTRA_DB_API_ENDPOINT",
             "FIREBASE_CRED",
             "STORAGE_BUCKET",
         ]
+        prod_required = [
+            "ASTRA_DB_APPLICATION_TOKEN",
+            "ASTRA_DB_API_ENDPOINT",
+        ]
+        if self.mode == "dev":
+            required_fields = dev_required + prod_required
+        else:
+            required_fields = prod_required
         missing = []
         for field in required_fields:
             if not getattr(self, field):
