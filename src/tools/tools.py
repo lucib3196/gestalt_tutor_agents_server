@@ -5,7 +5,7 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.tools import tool
 from pydantic import BaseModel
 
-from src.settings import get_settings
+from src.core.settings import get_settings
 
 
 settings = get_settings()

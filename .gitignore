@@ -1,6 +1,8 @@
 /assets
-
 .env
+.env
+src\data
+src/data
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -164,5 +166,6 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
 .langgraph_api/
+FIREBASE_CRED.json
 FIREBASE_CRED.json
 src/data
