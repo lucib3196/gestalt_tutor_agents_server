@@ -22,8 +22,8 @@ class LectureBundle:
 
 initialize_firebase_app()
 
-
 class FirebaseLectureDocumentLoader(BaseLoader):
+    """Load lecture markdown and metadata documents from Firebase Storage."""
 
     def __init__(
         self,
@@ -32,6 +32,14 @@ class FirebaseLectureDocumentLoader(BaseLoader):
         metadata: dict[str, str] | None = None,
         lecture_key: str = "lecture_summary",
     ):
+        """Initialize the loader.
+
+        Args:
+            prefix: Storage path prefix that contains lecture subfolders.
+            recursive: Included for loader compatibility; traversal is prefix-based.
+            metadata: Base metadata merged into each emitted document.
+            lecture_key: Key in each lecture JSON used to extract analysis metadata.
+        """
         self.prefix = prefix
         self.recursive = recursive
         self.base_metadata = metadata or {}
@@ -39,6 +47,7 @@ class FirebaseLectureDocumentLoader(BaseLoader):
         self.bucket = storage.bucket()
 
     def bundle_lectures(self) -> DefaultDict[str, LectureBundle]:
+        """Map lecture folder names to discovered PDF, markdown, and JSON blobs."""
         lectures = defaultdict(LectureBundle)
         for b in self.bucket.list_blobs(prefix=self.prefix):
             relative = b.name.removeprefix(self.prefix)
@@ -52,15 +61,23 @@ class FirebaseLectureDocumentLoader(BaseLoader):
         return lectures
 
     def load(self) -> List[Document]:
+        """Load complete lecture bundles as documents.
+
+        Returns:
+            A document per lecture containing markdown body and merged metadata.
+            Lectures missing required files or valid metadata are skipped.
+        """
         docs = []
         lecture_bundle = self.bundle_lectures()
         for title, contents in lecture_bundle.items():
+            # Require all three lecture artifacts.
             if not contents.pdf or not contents.md or not contents.json:
                 continue
 
             pdf_blob = self.bucket.blob(contents.pdf)
             md_blob = self.bucket.blob(contents.md)
             json_blob = self.bucket.blob(contents.json)
+            # Skip stale references that no longer exist in storage.
             if not pdf_blob.exists() or not md_blob.exists() or not json_blob.exists():
                 continue
 
@@ -97,6 +114,14 @@ class FirebaseLectureDocumentLoader(BaseLoader):
     def load_and_split(
         self, text_splitter: TextSplitter | None = None
     ) -> List[Document]:
+        """Load lectures and split them into chunked child documents.
+
+        Args:
+            text_splitter: Optional splitter. Defaults to recursive splitting.
+
+        Returns:
+            Chunked documents preserving parent metadata and chunk index.
+        """
         if not text_splitter:
             text_splitter = RecursiveCharacterTextSplitter(
                 chunk_size=2000,
@@ -142,3 +167,4 @@ if __name__ == "__main__":
 
     if new_docs:
         vector_store.add_documents(new_docs, ids=new_ids)
+
