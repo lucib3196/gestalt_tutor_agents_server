@@ -9,7 +9,6 @@ from src.core.settings import get_settings
 app_settings = get_settings()
 
 
-
 @lru_cache
 def initialize_firebase_app():
 

@@ -3,7 +3,7 @@ from pydantic import model_validator
 from functools import lru_cache
 from dotenv import load_dotenv
 from pathlib import Path
-from typing import Literal
+from typing import Literal, Optional
 import os
 from src.core.logger import logger
 
@@ -15,7 +15,11 @@ ROOT_PATH = Path(__file__).parents[2].as_posix()
 class Settings(BaseSettings):
     model: str = "gemini-2.5-flash"
     embedding_model: str = "gemini-embedding-001"
+
+    # Development/Production Configuration
     mode: Literal["dev", "production"] = "dev"
+    prompt_source: Optional[Literal["local", "production"]] = None
+
     GOOGLE_API_KEY: str | None = None
     LANGSMITH_API_KEY: str | None = None
     LANGSMITH_PROJECT: str | None = None
@@ -75,6 +79,22 @@ class Settings(BaseSettings):
             return self
         except Exception as e:
             raise
+
+    @model_validator(mode="after")
+    def validate_prompt_source(self):
+        if self.prompt_source == "local" and self.mode == "production":
+            raise ValueError(
+                "Prompt source cannot be local during production environments"
+            )
+        if not self.prompt_source:
+            logger.info("Prompt Source is not set attempting to resolve")
+
+        # By Defalt always use the production
+        if self.mode == "production":
+            self.prompt_source = "production"
+        elif self.mode == "dev":
+            self.prompt_source = "production"
+        return self
 
 
 @lru_cache
