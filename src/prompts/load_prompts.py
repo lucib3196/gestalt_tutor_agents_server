@@ -7,13 +7,18 @@ from langchain_core.prompts import ChatPromptTemplate
 from langsmith import Client
 
 from src.core.logger import logger
+from src.core.settings import get_settings
 
 """Helpers for loading, saving, and extracting prompt templates."""
 
 load_dotenv()
 client = Client()
-
-VALID_PROMPTS = ["me135_tutor_prompt","me118_tutor_prompt"]
+settings = get_settings()
+VALID_PROMPTS = [
+    "me135_tutor_prompt",
+    "me118_tutor_prompt",
+    "question_html_graph_prompt",
+]
 BASE_PATH = Path("./src/prompts")
 
 
@@ -27,7 +32,7 @@ def fetch_all_prompts():
         except Exception as e:
             logger.warning(f"Failed to get prompt {p} Error: {e}\n Double check name")
             continue
-        name = f"{p}.txt"
+        name = f"{p}.md"
         save_path = BASE_PATH / name
         save_path.write_text(text, encoding="utf-8")
 
@@ -58,7 +63,7 @@ def extract_langsmith_prompt(base: Any) -> str:
         if (
             hasattr(messages, "prompt")
             and getattr(messages, "prompt") is not None
-            and hasattr(messages.prompt, "template") # type: ignore
+            and hasattr(messages.prompt, "template")  # type: ignore
         ):  # type: ignore
             template = messages.prompt.template  # type: ignore
         elif isinstance(messages, SystemMessage):
@@ -73,6 +78,16 @@ def extract_langsmith_prompt(base: Any) -> str:
     except Exception as e:
         raise ValueError(f"Could not extract prompt {str(e)}")
 
+
+def resolve_prompt(prompt_identifier: str) -> str:
+    try:
+        if settings.prompt_source == "local":
+            prompt = load_local_prompt(f"src/prompts/{prompt_identifier}.md")
+        else:
+            prompt = extract_langsmith_prompt(client.pull_prompt(prompt_identifier))
+        return prompt
+    except Exception as e:
+        raise ValueError(f"Could not resolve prompt {e}")
 
 
 if __name__ == "__main__":

@@ -18,6 +18,7 @@ class Settings(BaseSettings):
 
     # Development/Production Configuration
     mode: Literal["dev", "production"] = "dev"
+    model_provider: str = "google_genai"
     prompt_source: Optional[Literal["local", "production"]] = None
 
     GOOGLE_API_KEY: str | None = None

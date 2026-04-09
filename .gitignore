@@ -16,6 +16,7 @@ FIREBASE_CRED.json
 /src\\data/
 /prompts/*.md
 src/prompts/*.txt
+src/graphs/outputs/**/*.json
 #######################################
 # 🧠 Python
 #######################################
