@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Any
+from typing import Any, Literal, List
 
 from dotenv import load_dotenv
 from langchain_core.messages import SystemMessage
@@ -20,8 +20,10 @@ VALID_PROMPTS = [
     "question_html_graph_prompt",
     "server_py_graph_prompt",
     "server_js_graph_prompt",
-    "server_js_graph_prompt",
+    "question_metadata_graph_prompt",
 ]
+
+
 BASE_PATH = Path("./src/prompts")
 
 
