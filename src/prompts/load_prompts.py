@@ -13,7 +13,7 @@ from src.core.logger import logger
 load_dotenv()
 client = Client()
 
-VALID_PROMPTS = ["me135_tutor_prompt"]
+VALID_PROMPTS = ["me135_tutor_prompt","me118_tutor_prompt"]
 BASE_PATH = Path("./src/prompts")
 
 
