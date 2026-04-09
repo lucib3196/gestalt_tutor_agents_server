@@ -18,7 +18,7 @@ from src.graphs.code_validation.graph import (
     graph as code_validation_graph,
 )
 from src.prompts.load_prompts import resolve_prompt
-from .initialization import model, vector_store
+from . import model, vector_store
 
 prompt: str = resolve_prompt("server_js_graph_prompt")
 

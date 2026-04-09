@@ -17,7 +17,7 @@ from src.graphs import (
 )
 from src.prompts.load_prompts import resolve_prompt
 
-from .initialization import model, vector_store
+from . import model, vector_store
 
 client = Client()
 base_prompt = resolve_prompt("question_html_graph_prompt")

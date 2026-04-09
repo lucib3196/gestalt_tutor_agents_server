@@ -8,7 +8,7 @@ from langgraph.graph import END, START, StateGraph
 from langgraph.types import Command
 from langsmith import Client
 
-from .initialization import vector_store, model
+from . import model, vector_store
 from src.prompts.load_prompts import resolve_prompt
 from src.graphs import (
     CodeResponse,

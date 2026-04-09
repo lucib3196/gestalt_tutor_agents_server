@@ -16,7 +16,7 @@ from src.graphs import (
     save_graph_visualization,
     to_serializable,
 )
-from .initialization import vector_store, model
+from . import model, vector_store
 from src.prompts.load_prompts import resolve_prompt
 
 prompt: str = resolve_prompt("server_js_graph_prompt")

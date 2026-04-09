@@ -10,7 +10,7 @@ from src.graphs import (
     save_graph_visualization,
     to_serializable,
 )
-from .initialization import model
+from . import model
 from src.prompts.load_prompts import resolve_prompt
 from langsmith import Client
 
