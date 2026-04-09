@@ -1,7 +1,7 @@
 
 # Gestalt Agent Server
 
-A LangGraph-powered backend server hosting Gestalt AI agents (ME135, ME118, Question Tutor, etc.).
+A LangGraph-powered backend server hosting Gestalt AI agents (ME135, ME118,Question Generator, etc.).
 
 ---
 
@@ -10,8 +10,8 @@ A LangGraph-powered backend server hosting Gestalt AI agents (ME135, ME118, Ques
 ## Clone the Repository
 
 ```bash
-git clone https://github.com/your-repo/gestalt-agent-server.git
-cd gestalt-agent-server
+git clone https://github.com/lucib3196/gestalt_tutor_agents_server.git
+cd gestalt_tutor_agents_server
 ```
 
 ---
@@ -57,18 +57,22 @@ Then configure your keys.
 ```env
 # Gemini Settings
 GOOGLE_API_KEY=
-MODEL=
+MODEL= 
 EMBEDDING_MODEL=
 
-# Langsmith Config
+# Langsmith config
 LANGSMITH_TRACING=
 LANGSMITH_ENDPOINT=
 LANGSMITH_API_KEY=
-LANGSMITH_PROJECT="GestaltTutor"
-
-# Vectorstore (AstraDB)
+LANGSMITH_PROJECT="GestaltMETutor"
+# Vectorstor
 ASTRA_DB_API_ENDPOINT=
 ASTRA_DB_APPLICATION_TOKEN=
+
+STORAGE_BUCKET=
+FIREBASE_CRED=
+FIREBASE_AUTH_EMULATOR_HOST=127.0.0.1:9099
+STORAGE_EMULATOR_HOST=http://localhost:9199
 ```
 
 ---
