@@ -21,8 +21,9 @@ VALID_PROMPTS = [
     "server_py_graph_prompt",
     "server_js_graph_prompt",
     "question_metadata_graph_prompt",
+    "gestalt_module_prompt",
+    "gestalt_agent_simple",
 ]
-
 
 BASE_PATH = Path("./src/prompts")
 
