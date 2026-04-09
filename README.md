@@ -10,7 +10,7 @@ A LangGraph-powered backend server hosting Gestalt AI agents (ME135, ME118, Ques
 ## Clone the Repository
 
 ```bash
-git clone https://github.com/your-repo/gestalt-agent-server.git
+git clone [https://github.com/your-repo/gestalt-agent-server.git](https://github.com/lucib3196/gestalt_tutor_agents_server.git)
 cd gestalt-agent-server
 ```
 
