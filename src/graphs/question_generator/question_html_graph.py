@@ -2,14 +2,22 @@ import json
 import operator
 from pathlib import Path
 from typing import Annotated, List, Literal, TypedDict
+
 from langchain_core.documents import Document
 from langchain_core.prompts import ChatPromptTemplate
+from langsmith import Client
 from langgraph.graph import END, START, StateGraph
 from langgraph.types import Command
-from src.graphs import Question, save_graph_visualization, to_serializable, CodeResponse
-from langsmith import Client
-from .initialization import vector_store, model
+
+from src.graphs import (
+    CodeResponse,
+    Question,
+    save_graph_visualization,
+    to_serializable,
+)
 from src.prompts.load_prompts import resolve_prompt
+
+from .initialization import model, vector_store
 
 client = Client()
 base_prompt = resolve_prompt("question_html_graph_prompt")
@@ -55,12 +63,22 @@ def retrieve_examples(state: State) -> Command[Literal["generate_code"]]:
 def generate_code(state: State):
     question_text = state["question"].question_text
     examples = state["formatted_examples"]
-    messages = prompt.format_prompt(
-        question=question_text, examples=examples
-    ).to_messages()
+    prompt_sections = [
+        base_prompt.strip(),
+        "Question to convert:",
+        question_text.strip(),
+    ]
+    if examples.strip():
+        prompt_sections.extend(
+            [
+                "Retrieved example question/question.html pairs:",
+                examples.strip(),
+            ]
+        )
+    final_prompt = "\n\n".join(prompt_sections)
 
     structured_model = model.with_structured_output(CodeResponse)
-    question_html = structured_model.invoke(messages)
+    question_html = structured_model.invoke(final_prompt)
     question_html = CodeResponse.model_validate(question_html)
     return {"question_html": question_html.code}
 

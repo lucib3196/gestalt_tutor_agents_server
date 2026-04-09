@@ -18,6 +18,9 @@ VALID_PROMPTS = [
     "me135_tutor_prompt",
     "me118_tutor_prompt",
     "question_html_graph_prompt",
+    "server_py_graph_prompt",
+    "server_js_graph_prompt",
+    "server_js_graph_prompt",
 ]
 BASE_PATH = Path("./src/prompts")
 
@@ -55,7 +58,6 @@ def extract_langsmith_prompt(base: Any) -> str:
     try:
         if not isinstance(base, ChatPromptTemplate):
             raise ValueError("expected a ChatPromptTemplate")
-
         if not base.messages:
             raise ValueError("ChatPromptTemplate.messages is empty")
 
