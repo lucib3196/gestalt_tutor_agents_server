@@ -18,5 +18,4 @@ model = init_chat_model(
     model_provider="google_genai",
 )
 
-
 agent = create_agent(model, system_prompt=prompt)

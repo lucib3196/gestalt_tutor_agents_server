@@ -167,3 +167,4 @@ cython_debug/
 #.idea/
 .langgraph_api/
 FIREBASE_CRED.json
+gestalt_tutor_agents_server/FIREBASE_CRED.json
