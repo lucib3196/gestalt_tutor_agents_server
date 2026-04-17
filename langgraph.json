@@ -4,9 +4,7 @@
   "graphs": {
     "agent_me135": "./src/agents/me135_agent/main.py:agent",
     "agent_me118": "./src/agents/me118_agent/main.py:agent",
-    "differential_eq_tutor": "./src/agents/diff_libretext/main.py:agent",
-    "gestalt_question_module": "./src/agents/gestalt_question_agents/agent_module.py:agent",
-    "agent_simple": "./src/agents/gestalt_question_agents/agent_simple.py:agent"
+    "differential_eq_tutor": "./src/agents/diff_libretext/main.py:agent"
   },
   "env": ".env",
   "image_distro": "wolfi"

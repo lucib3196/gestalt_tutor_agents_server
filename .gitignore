@@ -130,12 +130,5 @@ target/
 # 🤖 LangGraph / Custom
 #######################################
 .langgraph_api/
-
-#######################################
-# 📚 Misc
-#######################################
-*.manifest
-*.spec
-*.mo
-*.pot
-*.sage.py
+FIREBASE_CRED.json
+gestalt_tutor_agents_server/FIREBASE_CRED.json
