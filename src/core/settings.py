@@ -78,8 +78,6 @@ class Settings(BaseSettings):
 
         return self
 
-
-
     @model_validator(mode="after")
     def format_credentials(self):
         """Load Firebase credentials from JSON string or local file path."""
@@ -91,17 +89,16 @@ class Settings(BaseSettings):
                 # In production, FIREBASE_CRED should be a JSON string.
                 self.FIREBASE_CRED = json.loads(self.FIREBASE_CRED)
                 return self
+            else:
+                # In development, FIREBASE_CRED is treated as a relative file path.
+                cred_path = (Path(self.PROJECT_ROOT) / self.FIREBASE_CRED).resolve()
 
-            # In development, FIREBASE_CRED is treated as a relative file path.
-            cred_path = (Path(self.PROJECT_ROOT) / self.FIREBASE_CRED).resolve()
+                if not cred_path.exists():
+                    raise ValueError(f"Credential file not found: {cred_path}")
 
-            if not cred_path.exists():
-                raise ValueError(f"Credential file not found: {cred_path}")
+                self.FIREBASE_CRED = json.loads(cred_path.read_text())
 
-            self.FIREBASE_CRED = json.loads(cred_path.read_text())
-
-            return self
-
+                return self
         except Exception as e:
             raise ValueError(f"Failed to load firebase credentials: {e}")
 
