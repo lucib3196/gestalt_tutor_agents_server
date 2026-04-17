@@ -5,7 +5,7 @@ from typing import DefaultDict, List
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_text_splitters import TextSplitter
 
-from firebase.fb_initialization import initialize_firebase_app
+from src.core.fb_initialization import initialize_firebase_app
 from firebase_admin import storage
 from langchain_core.document_loaders import BaseLoader
 from langchain_core.documents import Document

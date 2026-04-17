@@ -3,7 +3,7 @@ from __future__ import annotations
 import json
 from functools import lru_cache
 from pathlib import Path
-from typing import Literal
+from typing import Literal, Optional
 
 from dotenv import load_dotenv
 from pydantic import Field, model_validator
@@ -25,6 +25,7 @@ class Settings(BaseSettings):
     model: str = "gemini-2.5-flash"
     embedding_model: str = "gemini-embedding-001"
     mode: ENV = Field(alias="ENV", default="dev")
+    prompt_source: Optional[Literal["local", "production"]] = None
 
     # External service keys
     GOOGLE_API_KEY: str | None = None
@@ -53,15 +54,9 @@ class Settings(BaseSettings):
             "LANGSMITH_PROJECT",
             "FIREBASE_CRED",
             "STORAGE_BUCKET",
-        ]
-        prod_required = [
             "ASTRA_DB_APPLICATION_TOKEN",
             "ASTRA_DB_API_ENDPOINT",
         ]
-        if self.mode == "dev":
-            required_fields = dev_required + prod_required
-        else:
-            required_fields = prod_required
         missing = []
         for field in required_fields:
             if not getattr(self, field):
@@ -84,13 +79,7 @@ class Settings(BaseSettings):
 
         return self
 
-    @model_validator(mode="after")
-    def validate_emulator(self):
-        """Require storage emulator host during development."""
-        if self.mode == "dev":
-            if not getattr(self, "STORAGE_EMULATOR_HOST"):
-                raise RuntimeError("FIREBASE_STORAGE_EMULATOR_HOST must be set in Dev")
-        return self
+
 
     @model_validator(mode="after")
     def format_credentials(self):
@@ -125,6 +114,7 @@ def get_settings() -> Settings:
         raise ValueError("Failed to load AI model. Must be set in ENV")
     return Settings()  # type: ignore
 
+
 @lru_cache
 def get_settings_pretty_print() -> str:
     """Return a readable summary of key runtime settings."""
@@ -141,6 +131,7 @@ def get_settings_pretty_print() -> str:
         f"Storage Bucket: {settings.STORAGE_BUCKET or '(not set)'}",
     ]
     return "\n".join(lines)
+
 
 if __name__ == "__main__":
     print(get_settings_pretty_print())
