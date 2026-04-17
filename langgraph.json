@@ -4,7 +4,8 @@
   "graphs": {
     "agent_me135": "./src/agents/me135_agent/main.py:agent",
     "agent_me118": "./src/agents/me118_agent/main.py:agent",
-    "differential_eq_tutor": "./src/agents/diff_libretext/main.py:agent"
+    "differential_eq_tutor": "./src/agents/diff_libretext/main.py:agent",
+    "stem_textbook_retrieval": "./src/agents/multi_textbook_agent/main.py:agent"
   },
   "env": ".env",
   "image_distro": "wolfi"

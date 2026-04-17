@@ -22,6 +22,7 @@ VALID_TEXTBOOK: TypeAlias = Literal[
     "physics_v1_openstax",
     "math_2562_libretext_diff_eq_with_linear_algebra",
 ]
+# TODO Modify the description, these descriptions should be consise and to the point the goal is to tell the llm what this retriever has access to and will be used to construct a prompt to explain the capabilites
 TEXTBOOKS: dict[VALID_TEXTBOOK, TextbookConfig] = {
     "calculus_openstax": TextbookConfig(
         key="calculus_openstax",
