@@ -50,7 +50,6 @@ class Settings(BaseSettings):
         """Ensure core runtime secrets and endpoints are present."""
         required_fields = [
             "GOOGLE_API_KEY",
-            "LANGSMITH_API_KEY",
             "LANGSMITH_PROJECT",
             "FIREBASE_CRED",
             "STORAGE_BUCKET",
