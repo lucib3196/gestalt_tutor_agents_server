@@ -1,4 +1,4 @@
-from lecture_processor.full_extraction.graph import graph as FullExtractionGraph, State
+from src.lecture_processor.full_extraction.graph import graph as FullExtractionGraph, State
 from pathlib import Path
 import asyncio
 import json
@@ -48,5 +48,5 @@ async def batch_process(pdf_dir: str):
 
 
 if __name__ == "__main__":
-    pdf_dir = r"data\me118"
+    pdf_dir = r"data/me116"
     asyncio.run(batch_process(pdf_dir))

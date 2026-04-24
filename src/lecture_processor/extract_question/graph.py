@@ -7,7 +7,7 @@ from langsmith import Client
 from langchain.chat_models import init_chat_model
 from langgraph.graph import StateGraph, START, END
 
-from src.utils import extract_langsmith_prompt
+from src.prompts.load_prompts import extract_langsmith_prompt
 from .model import ExtractedQuestion
 from pdf_invoke import MultiModalLLM
 from pdf_segmentation.utils import (
@@ -16,7 +16,7 @@ from pdf_segmentation.utils import (
 )
 
 client = Client()
-prompt = extract_langsmith_prompt(client.pull_prompt("extract-all-questions"))
+prompt = extract_langsmith_prompt(client.pull_prompt("extract_all_questions"))
 
 llm = init_chat_model(model="gemini-2.5-flash", model_provider="google_genai")
 

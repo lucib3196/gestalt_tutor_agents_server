@@ -80,7 +80,7 @@ async def postprocess_lecture_output(
 
 
 async def main():
-    folder_path = Path(r"data\me118\output").resolve()
+    folder_path = Path(r"data/me116/output").resolve()
 
     filename = "output.json"
     tasks = []

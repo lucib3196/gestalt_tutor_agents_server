@@ -1,4 +1,4 @@
-from src.firebase.fb_initialization import initialize_firebase_app
+from src.core.fb_initialization import initialize_firebase_app
 from pathlib import Path
 from firebase_admin import storage
 import json
@@ -56,4 +56,4 @@ def upload_directory(local_dir: str | Path, remote_prefix: str = ""):
 
 if __name__ == "__main__":
     print("Running")
-    upload_directory("data/me118/output", "me118_winter_2026/lectures")
+    upload_directory("data/me116/output", "me116_spring_2026/lectures")

@@ -23,6 +23,7 @@ VALID_PROMPTS = [
     "question_metadata_graph_prompt",
     "gestalt_module_prompt",
     "gestalt_agent_simple",
+    "extract_derivations"
 ]
 
 BASE_PATH = Path("./src/prompts")

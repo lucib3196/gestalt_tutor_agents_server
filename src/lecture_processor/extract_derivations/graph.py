@@ -15,12 +15,12 @@ from pdf_segmentation.utils import (
 )
 
 from .model import Derivation
-from src.utils import extract_langsmith_prompt
+from src.prompts.load_prompts import extract_langsmith_prompt
 
 
 client = Client()
 
-prompt = extract_langsmith_prompt(client.pull_prompt("extract-derivations"))
+prompt = extract_langsmith_prompt(client.pull_prompt("extract_derivations"))
 
 llm = init_chat_model(model="gemini-2.5-flash", model_provider="google_genai")
 

@@ -13,23 +13,23 @@ from pdf_segmentation.utils import (
     to_serializable,
 )
 import dotenv
-from lecture_processor.generate_questions.graph import (
+from src.lecture_processor.generate_questions.graph import (
     graph as QuestionGen,
     State as QGenState,
     ConceptualQuestion,
 )
 from pdf_segmentation import PDFSegmentation, Section, ListOutput, SegmentationInput
-from lecture_processor.extract_derivations.graph import (
+from src.lecture_processor.extract_derivations.graph import (
     graph as DerivationGraph,
     State as DerivationState,
     Derivation,
 )
-from lecture_processor.extract_question.graph import (
+from src.lecture_processor.extract_question.graph import (
     graph as QuestionExtractionGraph,
     State as QExtState,
     ExtractedQuestion,
 )
-from lecture_processor.lecture_analysis.graph import (
+from src.lecture_processor.lecture_analysis.graph import (
     graph as LectureGraph,
     State as LectState,
     LectureAnalysis,
@@ -39,20 +39,31 @@ client = Client()
 dotenv.load_dotenv()
 
 section_extraction_prompt = """
-Extract section chunks from each page of this lecture PDF.
+Extract semantically coherent section chunks from each page of this lecture PDF.
 
-Focus only on content relevant to:
+Your goal is to identify only the chunks that are relevant to:
 1) derivations
 2) questions
+
+A chunk should group together text that belongs to the same derivation or the same question, even if that content spans multiple nearby paragraphs, equations, bullet points, or short explanations. Prefer semantically related content over arbitrary page slices.
+
+Each extracted chunk will correspond to a page range. That page range should contain all relevant information for the semantic chunk, so include every nearby page needed to capture the full derivation or question and its essential context.
 
 For every extracted chunk:
 - Assign `type` as either `derivation` or `question`.
 - Include a concise `name`.
 - Include a concise `description`.
 - Preserve enough surrounding context for the chunk to stand alone.
+- Keep together the setup, key steps, notation, and conclusion if they are part of the same derivation or question.
 
-Do not extract unrelated narrative, administrative text, or examples that are not part of a derivation or question.
+Do not extract:
+- unrelated narrative or lecture exposition
+- administrative or logistical text
+- examples that are not themselves the target derivation or question
+- partial fragments when the full semantically related chunk is available nearby
 """
+
+
 class LectureSection(Section, BaseModel):
     name: str
     description: str
@@ -75,8 +86,6 @@ class State(BaseModel):
 
 
 llm = init_chat_model(model="gemini-2.5-flash", model_provider="google_genai")
-
-
 
 
 async def extract_sections(state: State):
@@ -153,7 +162,7 @@ async def extract_questions(state: State):
             tasks.append(QuestionExtractionGraph.ainvoke(q))
 
     if not tasks:
-        return {"questions": []}
+        return {"extracted_questions": []}
 
     raw_results: List[QExtState] = await asyncio.gather(*tasks)
 
@@ -163,7 +172,7 @@ async def extract_questions(state: State):
         for question in QExtState.model_validate(result).questions
     ]
 
-    return {"questions": questions}
+    return {"extracted_questions": questions}
 
 
 builder = StateGraph(State)

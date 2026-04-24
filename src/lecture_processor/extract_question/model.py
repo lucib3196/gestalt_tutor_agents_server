@@ -1,7 +1,7 @@
 from typing import List, Literal
 from pydantic import BaseModel, Field
 
-from lecture_processor.models import Option, PageRange
+from src.lecture_processor.models import Option, PageRange
 
 QuestionTypes = Literal[
     "conceptual", "computational", "derivation", "multiple_choice", "short_answer"

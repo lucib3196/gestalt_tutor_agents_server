@@ -1,5 +1,6 @@
 # --- Standard Library ---
 import asyncio
+import dotenv
 from pathlib import Path
 
 # --- Third-Party ---
@@ -14,7 +15,7 @@ from pdf_segmentation.utils import (
     save_graph_visualization,
     to_serializable,
 )
-from src.utils import extract_langsmith_prompt
+from src.prompts.load_prompts import extract_langsmith_prompt
 
 from pdf_invoke import MultiModalLLM
 

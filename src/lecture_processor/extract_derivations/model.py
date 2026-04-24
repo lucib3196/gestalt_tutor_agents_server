@@ -1,6 +1,6 @@
 from pydantic import BaseModel, Field
 from typing import List
-from lecture_processor.models import PageRange
+from src.lecture_processor.models import PageRange
 
 
 class Derivation(BaseModel):

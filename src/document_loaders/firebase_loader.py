@@ -149,7 +149,7 @@ if __name__ == "__main__":
     embeddings = GoogleGenerativeAIEmbeddings(model="gemini-embedding-001")
     vector_store = InMemoryVectorStore(embeddings)
 
-    docs = FirebaseLectureDocumentLoader(prefix="me118_winter_2026/lectures").load()
+    docs = FirebaseLectureDocumentLoader(prefix="me116_spring_2026/lectures").load()
 
     ids = vector_store.add_documents(docs)
     existing_ids = set(vector_store.store.keys())
