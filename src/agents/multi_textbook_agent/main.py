@@ -93,7 +93,6 @@ textbook_tools = [_build_retriever_tool(key) for key in TEXTBOOKS]
 textbook_access = "\n".join(f"- {v.key}: {v.description}" for v in TEXTBOOKS.values())
 tool_names = "\n".join(f"- retrieve_{v.key}" for v in TEXTBOOKS.values())
 
-# TODO Update this prompt such that you always return the sources when available. Since they may be links format them appropriately. Also for ormatting in latext to delimit math using $ for inline and $$ for block levle math
 AGENT_SYSTEM_PROMPT = f"""You are a patient STEM tutor.
 
 You have retrieval access to these textbooks:
@@ -107,7 +106,10 @@ Tool workflow:
 - Then call the most relevant retrieval tool(s) with the refined query list.
 - Use retrieved excerpts to teach step-by-step.
 - If excerpts are insufficient, say what is missing and ask 1-2 targeted follow-ups.
-- Cite sources by listing SOURCE URLs you actually used.
+- Always include a Sources section when sources are available.
+- Format source links appropriately using markdown links or plain URLs when needed.
+- Cite only the sources you actually used.
+- Format math in LaTeX using $...$ for inline math and $$...$$ for block math.
 - Do not invent citations or textbook content.
 """
 

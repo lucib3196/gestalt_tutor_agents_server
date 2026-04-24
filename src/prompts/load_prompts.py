@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Any, Literal, List
+from typing import Any
 
 from dotenv import load_dotenv
 from langchain_core.messages import SystemMessage
@@ -23,7 +23,8 @@ VALID_PROMPTS = [
     "question_metadata_graph_prompt",
     "gestalt_module_prompt",
     "gestalt_agent_simple",
-    "extract_derivations"
+    "extract_derivations",
+    "me116_tutor_prompt",
 ]
 
 BASE_PATH = Path("./src/prompts")
