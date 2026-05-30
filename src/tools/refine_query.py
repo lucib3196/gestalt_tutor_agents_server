@@ -7,7 +7,6 @@ from pydantic import BaseModel
 
 from src.core.settings import get_settings
 
-
 settings = get_settings()
 
 model = init_chat_model(
