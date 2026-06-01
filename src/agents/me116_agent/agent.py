@@ -38,7 +38,7 @@ Textbook Instructions
 
 
 model = init_chat_model(
-    model=settings.model,
+    model="gemini-3.1-flash-lite",
     model_provider="google_genai",
 )
 
