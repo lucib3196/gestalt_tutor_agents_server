@@ -119,6 +119,7 @@ def get_settings_pretty_print() -> str:
         "=== Runtime Settings ===",
         f"ENV: {settings.mode}",
         f"Base Model: {settings.model}",
+        f"Prompt Source {settings.prompt_source}"
         f"Embedding Model: {settings.embedding_model}",
         f"Firebase Mode: {settings.FIREBASE_MODE}",
         f"Project Root: {settings.PROJECT_ROOT}",

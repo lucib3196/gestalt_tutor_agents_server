@@ -1,4 +1,3 @@
-
 from langchain_astradb import AstraDBVectorStore
 from langchain_google_genai import GoogleGenerativeAIEmbeddings
 from src.core.settings import get_settings

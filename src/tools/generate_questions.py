@@ -5,8 +5,12 @@ from langchain.chat_models import init_chat_model
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.tools import tool
 from pydantic import BaseModel, Field
+from langchain.messages import ToolMessage
+from langchain.tools import tool, ToolRuntime
 
 from src.core.settings import get_settings
+from uuid import uuid4, UUID
+from pydantic import Field
 
 settings = get_settings()
 
@@ -114,6 +118,7 @@ class Option(BaseModel):
 
 
 class MultipleChoiceQuestionBase(BaseModel):
+    id: UUID | None = Field(default_factory=uuid4)
     question: Annotated[
         str,
         Field(
@@ -289,6 +294,7 @@ class MultipleChoiceQuestionToolResponse(BaseModel):
 
 @tool(args_schema=MCQInput)
 def generate_mcq(
+    runtime: ToolRuntime,
     topic: str,
     context: str,
     difficulty: DifficultyLevel = DifficultyLevel.MEDIUM,
@@ -355,4 +361,11 @@ def generate_mcq(
         )
         final.append(f)
 
-    return MultipleChoiceQuestionToolResponse(payload=final).model_dump()
+    response_data = MultipleChoiceQuestionToolResponse(payload=final).model_dump()
+
+    return ToolMessage(
+        name="generate_mcq",
+        content="",
+        tool_call_id=runtime.tool_call_id,  # Required to match the call
+        artifact=response_data,  # Hidden from LLM, accessible in code
+    )
