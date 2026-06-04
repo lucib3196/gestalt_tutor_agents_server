@@ -52,9 +52,9 @@ class ExtractedQuestion(BaseModel):
         ),
     )
 
-    solution: List[str] = Field(
-        default=[],
-        description="The extracted or reconstructed solution guide corresponding to the question.",
+    solution: str= Field(
+       
+        description="The extracted or reconstructed solution guide corresponding to the question. Each step should contain all the information on a per step basis",
     )
 
     def as_string(self) -> str:
@@ -76,7 +76,9 @@ class ExtractedQuestion(BaseModel):
             )
             base.append(f"**Options:**\n{options_formatted}")
 
-        formatted_solution = "/n".join(step for step in self.solution)
+        formatted_solution = self.solution
+        if isinstance(self.solution, list):
+            formatted_solution = "/n".join(step for step in self.solution)
         # Solution
         base.append(f"**Solution:**\n{ formatted_solution or 'N/A'}")
 

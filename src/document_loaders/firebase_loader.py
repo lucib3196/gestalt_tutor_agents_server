@@ -12,6 +12,8 @@ from langchain_core.documents import Document
 
 from src.lecture_processor.lecture_analysis.model import LectureAnalysis
 
+from src.lecture_processor.extract_question.graph import State as EQState
+
 
 @dataclass
 class LectureBundle:
@@ -21,6 +23,7 @@ class LectureBundle:
 
 
 initialize_firebase_app()
+
 
 class FirebaseLectureDocumentLoader(BaseLoader):
     """Load lecture markdown and metadata documents from Firebase Storage."""
@@ -142,6 +145,82 @@ class FirebaseLectureDocumentLoader(BaseLoader):
         return chunked_docs
 
 
+class FBHomeworkDocumentLoader(BaseLoader):
+    def __init__(
+        self,
+        key: str,
+        prefix: str,
+        recursive: bool = True,
+        metadata: dict[str, str] | None = None,
+    ):
+        """Initialize the loader.
+
+        Args:
+            prefix: Storage path prefix that contains lecture subfolders.
+            recursive: Included for loader compatibility; traversal is prefix-based.
+            metadata: Base metadata merged into each emitted document.
+            lecture_key: Key in each lecture JSON used to extract analysis metadata.
+        """
+        self.prefix = prefix
+        self.recursive = recursive
+        self.base_metadata = metadata or {}
+        self.key = key
+        self.bucket = storage.bucket()
+
+    def bundle(self) -> DefaultDict[str, LectureBundle]:
+        """Map lecture folder names to discovered PDF, markdown, and JSON blobs."""
+        lectures = defaultdict(LectureBundle)
+        for b in self.bucket.list_blobs(prefix=self.prefix):
+            relative = b.name.removeprefix(self.prefix)
+            lecture = relative.lstrip("/").split("/", 1)[0]
+            if b.name.endswith(".pdf"):
+                lectures[lecture].pdf = b.name
+            elif b.name.endswith(".md"):
+                lectures[lecture].md = b.name
+            elif b.name.endswith(".json"):
+                lectures[lecture].json = b.name
+        return lectures
+
+    def load(self) -> List[Document]:
+        docs = []
+        bundle = self.bundle()
+
+        for title, contents in bundle.items():
+
+            if not contents.pdf or not contents.md or not contents.json:
+                print("No Content Skipping", )
+                continue
+            pdf_blob = self.bucket.blob(contents.pdf)
+            md_blob = self.bucket.blob(contents.md)
+            json_blob = self.bucket.blob(contents.json)
+            if not pdf_blob.exists() or not md_blob.exists() or not json_blob.exists():
+                continue
+            content = md_blob.download_as_string().decode("utf-8")
+            raw_metadata = json.loads(json_blob.download_as_string())
+            validated = EQState.model_validate(raw_metadata)
+            pdf_path = pdf_blob.public_url
+            md_path = md_blob.public_url
+
+            prefix_id = self.prefix.rstrip("/").replace("/", "_")
+            lecture_id = title.lower()
+            doc_id = f"{prefix_id}:{lecture_id}:0"
+
+            docs.append(
+                Document(
+                    id=doc_id,
+                    page_content=content,
+                    metadata={
+                        **self.base_metadata,
+                        "type": "homework_solution",
+                        "source_pdf": pdf_path,
+                        "source_markdown": md_path,
+                    },
+                )
+            )
+
+        return docs
+
+
 if __name__ == "__main__":
     from langchain_core.vectorstores import InMemoryVectorStore
     from langchain_google_genai import GoogleGenerativeAIEmbeddings
@@ -149,7 +228,12 @@ if __name__ == "__main__":
     embeddings = GoogleGenerativeAIEmbeddings(model="gemini-embedding-001")
     vector_store = InMemoryVectorStore(embeddings)
 
-    docs = FirebaseLectureDocumentLoader(prefix="me116_spring_2026/lectures").load()
+    docs = FBHomeworkDocumentLoader(
+        key="questions",
+        prefix="me116_spring_2026/homework/homework1",
+        metadata={"course": "me116_spring2026"},
+    ).load()
+    print(docs[0])
 
     ids = vector_store.add_documents(docs)
     existing_ids = set(vector_store.store.keys())
@@ -167,4 +251,3 @@ if __name__ == "__main__":
 
     if new_docs:
         vector_store.add_documents(new_docs, ids=new_ids)
-

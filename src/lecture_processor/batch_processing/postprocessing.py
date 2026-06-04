@@ -1,6 +1,7 @@
 from pathlib import Path
 import json
 import asyncio
+from src.lecture_processor.extract_question.model import ExtractedQuestion
 from . import Derivation, LectureAnalysis, ExtractedQuestion, ConceptualQuestion
 import base64
 
@@ -79,29 +80,66 @@ async def postprocess_lecture_output(
     )
 
 
+async def postprocess_homeowork_output(
+    input_json_path: Path,
+    output_text_path: Path,
+) -> None:
+    """
+    Postprocess a lecture graph output JSON into a cleaned,
+    human-readable text artifact.
+    """
+
+    # ----------------------------
+    # Load JSON
+    # ----------------------------
+    content = json.loads(input_json_path.read_text(encoding="utf-8"))
+    content.pop("llm", None)
+
+    # ----------------------------
+    # Validate and reconstruct models
+    # ----------------------------
+
+    extracted_questions = [
+        ExtractedQuestion.model_validate(q) for q in content.get("questions", [])
+    ]
+    final_text = "".join(q.as_string() for q in extracted_questions)
+
+    # ----------------------------
+    # Write output
+    # ----------------------------
+    output_text_path.parent.mkdir(parents=True, exist_ok=True)
+    output_text_path.write_text(final_text, encoding="utf-8")
+    pdf_bytes = content.get("sections", {}).get("pdf_bytes", None)
+    # pdf = Path(output_text_path.parent / f"{input_json_path.stem}").write_bytes(
+    #     base64.b64decode(pdf_bytes)
+    # )
+
+
 async def main():
-    folder_path = Path(r"data/me116/output").resolve()
+    
+    for i in  range(7,9):
+        folder_path = Path(f"data/me116/homework{i}/output").resolve()
 
-    filename = "output.json"
-    tasks = []
+        filename = "output.json"
+        tasks = []
 
-    for p in folder_path.iterdir():
-        if not p.is_dir():
-            continue
+        for p in folder_path.iterdir():
+            if not p.is_dir():
+                continue
 
-        output_text_name = f"{p.name.split('.')[0]}.md"
-        output = p / output_text_name
-        data = p / filename
+            output_text_name = f"{p.name.split('.')[0]}.md"
+            output = p / output_text_name
+            data = p / filename
 
-        tasks.append(
-            postprocess_lecture_output(
-                data,
-                output_text_path=output,
+            tasks.append(
+                postprocess_homeowork_output(
+                    data,
+                    output_text_path=output,
+                )
             )
-        )
 
-    # Run all postprocessing concurrently
-    await asyncio.gather(*tasks)
+        # Run all postprocessing concurrently
+        await asyncio.gather(*tasks)
 
 
 if __name__ == "__main__":

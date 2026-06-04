@@ -16,6 +16,7 @@ def remove_key(obj, key):
         for v in obj:
             remove_key(v, key)
 
+
 def upload_directory(local_dir: str | Path, remote_prefix: str = ""):
     bucket = storage.bucket()
     local_dir = Path(local_dir)
@@ -28,6 +29,8 @@ def upload_directory(local_dir: str | Path, remote_prefix: str = ""):
             relative_path = file.relative_to(local_dir)
             blob_path = f"{remote_prefix}/{relative_path}".replace("\\", "/")
             blob = bucket.blob(blob_path)
+            if blob.exists():
+                print("Skipping Blob", blob_path)
 
             # Handle JSON cleanup
             if file.suffix == ".json":
@@ -54,6 +57,13 @@ def upload_directory(local_dir: str | Path, remote_prefix: str = ""):
     except Exception as e:
         raise ValueError(f"Failed to upload: {e}")
 
+
 if __name__ == "__main__":
     print("Running")
-    upload_directory("data/me116/output", "me116_spring_2026/lectures")
+
+    for i in range(1, 9):
+        if i == 6:
+            continue
+        upload_directory(
+            f"data/me116/homework{i}/output", f"me116_spring_2026/homework/homework{i}"
+        )

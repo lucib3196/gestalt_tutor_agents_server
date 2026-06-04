@@ -17,7 +17,6 @@ from pdf_segmentation.utils import (
 
 client = Client()
 prompt = extract_langsmith_prompt(client.pull_prompt("extract_all_questions"))
-
 llm = init_chat_model(model="gemini-2.5-flash", model_provider="google_genai")
 
 
@@ -52,8 +51,8 @@ graph = builder.compile()
 
 if __name__ == "__main__":
     # Path to the lecture PDF
-    pdf_path = Path(r"data\Lecture_02_03.pdf").resolve()
-    output_path = Path(r"lecture_processor\extract_question\output").resolve()
+    pdf_path = Path(r"data/me116/homework/P1_sm1_39.pdf").resolve()
+    output_path = Path(r"src/lecture_processor/extract_question/output").resolve()
 
     save_path = output_path
     save_graph_visualization(graph, save_path, "graph.png")

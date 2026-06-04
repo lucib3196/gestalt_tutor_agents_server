@@ -1,7 +1,10 @@
 from langchain_astradb import AstraDBVectorStore
 from langchain_google_genai import GoogleGenerativeAIEmbeddings
 from src.core.settings import get_settings
-from src.document_loaders.firebase_loader import FirebaseLectureDocumentLoader
+from src.document_loaders.firebase_loader import (
+    FirebaseLectureDocumentLoader,
+    FBHomeworkDocumentLoader,
+)
 import asyncio
 from typing import List
 from langchain_core.documents import Document
@@ -47,26 +50,39 @@ async def get_all_documents(docs: List[Document]) -> RetrievedDocuments:
 
 
 async def main():
+    for i in range(1, 9):
+        if i == 6:
+            continue
+        
+        prefix =f"me116_spring_2026/homework/homework{i}"
+        docs = FBHomeworkDocumentLoader(
+            key="questions",
+            prefix=prefix,
+            metadata={"course": "me116_spring2026", "homework": str(i)},
+        ).load()
 
-    docs = FirebaseLectureDocumentLoader(
-        prefix="me116_spring_2026/lectures"
-    ).load_and_split()
+        results = await get_all_documents(docs)
 
-    results = await get_all_documents(docs)
+        new_docs = results.new_docs
+        updated_docs = results.updated_docs
 
-    new_docs = results.new_docs
-    updated_docs = results.updated_docs
+        print(f"Summary: New Docs {len(new_docs)}, Docs to update {len(updated_docs)}")
+        example = new_docs[0] if new_docs else updated_docs[0] if updated_docs else []
+        print("Here is a new doc\n\n", example, "\n\n")
+        answer = input("Continue? [y/N]: ").strip().lower()
+        if answer in ("y", "yes"):
+            print("Continuing...")
+            if new_docs:
+                await vector_store.aadd_documents(new_docs)
 
-    print(f"Summary: New Docs {len(new_docs)}, Docs to update {len(updated_docs)}")
+            if updated_docs:
+                documents = [d for d, _ in updated_docs]
+                ids = [id for _, id in updated_docs]
 
-    if new_docs:
-        await vector_store.aadd_documents(new_docs)
-
-    if updated_docs:
-        documents = [d for d, _ in updated_docs]
-        ids = [id for _, id in updated_docs]
-
-        await vector_store.aadd_documents(documents=documents, ids=ids)
+                await vector_store.aadd_documents(documents=documents, ids=ids)
+        else:
+            print("Cancelled.")
+            exit()
 
 
 if __name__ == "__main__":
