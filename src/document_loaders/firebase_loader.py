@@ -12,7 +12,6 @@ from langchain_core.documents import Document
 
 from src.lecture_processor.lecture_analysis.model import LectureAnalysis
 
-from src.lecture_processor.extract_question.graph import State as EQState
 
 
 @dataclass
@@ -197,7 +196,7 @@ class FBHomeworkDocumentLoader(BaseLoader):
                 continue
             content = md_blob.download_as_string().decode("utf-8")
             raw_metadata = json.loads(json_blob.download_as_string())
-            validated = EQState.model_validate(raw_metadata)
+            # validated = EQState.model_validate(raw_metadata)
             pdf_path = pdf_blob.public_url
             md_path = md_blob.public_url
 
