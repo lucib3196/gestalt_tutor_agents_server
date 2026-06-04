@@ -32,7 +32,7 @@ class Response(BaseModel):
 async def extract_questions(state: State):
     processor = MultiModalLLM(
         prompt=prompt,
-        model=llm,
+        model=llm
     )
     response = await processor.ainvoke(output_model=Response, pdf=state.lecture_pdf)
     response = Response.model_validate(response)
