@@ -50,39 +50,40 @@ async def get_all_documents(docs: List[Document]) -> RetrievedDocuments:
 
 
 async def main():
-    for i in range(1, 9):
-        if i == 6:
-            continue
-        
-        prefix =f"me116_spring_2026/homework/homework{i}"
-        docs = FBHomeworkDocumentLoader(
-            key="questions",
-            prefix=prefix,
-            metadata={"course": "me116_spring2026", "homework": str(i)},
-        ).load()
+    # for i in range(8, 10):
+    #     if i == 6:
+    #         continue
 
-        results = await get_all_documents(docs)
+    prefix = f"me116_spring_2026/lectures"
+    docs = FirebaseLectureDocumentLoader(
+        prefix=prefix,
+        metadata={
+            "course": "me116_spring2026",
+        },
+    ).load()
 
-        new_docs = results.new_docs
-        updated_docs = results.updated_docs
+    results = await get_all_documents(docs)
 
-        print(f"Summary: New Docs {len(new_docs)}, Docs to update {len(updated_docs)}")
-        example = new_docs[0] if new_docs else updated_docs[0] if updated_docs else []
-        print("Here is a new doc\n\n", example, "\n\n")
-        answer = input("Continue? [y/N]: ").strip().lower()
-        if answer in ("y", "yes"):
-            print("Continuing...")
-            if new_docs:
-                await vector_store.aadd_documents(new_docs)
+    new_docs = results.new_docs
+    updated_docs = results.updated_docs
 
-            if updated_docs:
-                documents = [d for d, _ in updated_docs]
-                ids = [id for _, id in updated_docs]
+    print(f"Summary: New Docs {len(new_docs)}, Docs to update {len(updated_docs)}")
+    example = new_docs[0] if new_docs else updated_docs[0] if updated_docs else []
+    print("Here is a new doc\n\n", example, "\n\n")
+    answer = input("Continue? [y/N]: ").strip().lower()
+    if answer in ("y", "yes"):
+        print("Continuing...")
+        if new_docs:
+            await vector_store.aadd_documents(new_docs)
 
-                await vector_store.aadd_documents(documents=documents, ids=ids)
-        else:
-            print("Cancelled.")
-            exit()
+        if updated_docs:
+            documents = [d for d, _ in updated_docs]
+            ids = [id for _, id in updated_docs]
+
+            await vector_store.aadd_documents(documents=documents, ids=ids)
+    else:
+        print("Cancelled.")
+        exit()
 
 
 if __name__ == "__main__":

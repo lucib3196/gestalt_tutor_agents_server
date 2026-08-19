@@ -61,7 +61,7 @@ def upload_directory(local_dir: str | Path, remote_prefix: str = ""):
 if __name__ == "__main__":
     print("Running")
 
-    for i in range(1, 9):
+    for i in range(1, 10):
         if i == 6:
             continue
         upload_directory(

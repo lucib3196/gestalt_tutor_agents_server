@@ -94,5 +94,5 @@ async def batch_process(pdf_dir: str):
 
 
 if __name__ == "__main__":
-    pdf_dir = r"data/me116/homework8"
-    asyncio.run(batch_process_hw(pdf_dir))
+    pdf_dir = r"data/me116"
+    asyncio.run(batch_process(pdf_dir))

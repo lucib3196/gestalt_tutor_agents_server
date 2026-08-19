@@ -117,8 +117,8 @@ async def postprocess_homeowork_output(
 
 async def main():
     
-    for i in  range(7,9):
-        folder_path = Path(f"data/me116/homework{i}/output").resolve()
+    for i in  range(7,10):
+        folder_path = Path(f"data/me116/output").resolve()
 
         filename = "output.json"
         tasks = []
@@ -132,7 +132,7 @@ async def main():
             data = p / filename
 
             tasks.append(
-                postprocess_homeowork_output(
+                postprocess_lecture_output(
                     data,
                     output_text_path=output,
                 )

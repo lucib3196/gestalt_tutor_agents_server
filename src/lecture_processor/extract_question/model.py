@@ -52,7 +52,7 @@ class ExtractedQuestion(BaseModel):
         ),
     )
 
-    solution: str= Field(
+    solution: str|List[str]= Field(
        
         description="The extracted or reconstructed solution guide corresponding to the question. Each step should contain all the information on a per step basis",
     )
